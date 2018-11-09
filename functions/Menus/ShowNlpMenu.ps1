@@ -68,7 +68,7 @@ function ShowNlpMenu()
             '1' {
                 $packageUrl = $globals.realtimePackageUrl
                 if ($local) {
-                    $packageUrl = "$here\..\..\..\helm.realtime\fabricnlp"
+                    $packageUrl = "$here\..\..\..\helm.nlp\fabricnlp"
                     Write-Host "Loading package from $packageUrl"
                 }
                 $VerbosePreference = 'Continue'

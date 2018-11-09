@@ -32,6 +32,10 @@ function CreateSecretsForNlp()
 
     Write-Verbose 'CreateSecretsForNlp: Starting'
 
+    Set-StrictMode -Version latest
+    # stop whenever there is an error
+    $ErrorActionPreference = "Stop"
+
     CreateNamespaceIfNotExists -namespace $namespace
 
     CreateNamespaceIfNotExists $namespace

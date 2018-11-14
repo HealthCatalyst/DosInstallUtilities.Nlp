@@ -66,7 +66,7 @@ function ShowNlpMenu()
         $userinput = Read-Host "Please make a selection"
         switch ($userinput) {
             '1' {
-                $packageUrl = $globals.realtimePackageUrl
+                $packageUrl = $kubeGlobals.realtimePackageUrl
                 if ($local) {
                     $packageUrl = "$here\..\..\..\helm.nlp\fabricnlp"
                     Write-Host "Loading package from $packageUrl"

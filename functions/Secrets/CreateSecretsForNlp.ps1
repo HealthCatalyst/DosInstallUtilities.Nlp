@@ -44,6 +44,11 @@ function CreateSecretsForNlp()
     SaveSecretValue -secretname "nlpweb-external-url" -valueName "value" -value "nlp.$dnshostname" -namespace $namespace
     SaveSecretValue -secretname "jobserver-external-url" -valueName "value" -value "nlpjobs.$dnshostname" -namespace $namespace
 
+    $secret = "mysqlrootpassword"
+    GenerateSecretPassword -secretname "$secret" -namespace "$namespace"
+    $secret = "mysqlpassword"
+    GenerateSecretPassword -secretname "$secret" -namespace "$namespace"
+
     Write-Verbose 'CreateSecretsForNlp: Done'
 
 }

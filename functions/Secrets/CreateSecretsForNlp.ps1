@@ -19,8 +19,7 @@ CreateSecretsForNlp
 
 
 #>
-function CreateSecretsForNlp()
-{
+function CreateSecretsForNlp() {
     [CmdletBinding()]
     param
     (
@@ -38,8 +37,14 @@ function CreateSecretsForNlp()
 
     CreateNamespaceIfNotExists -namespace $namespace
 
-    CreateNamespaceIfNotExists $namespace
-    AskForPasswordAnyCharacters -secretname "smtprelaypassword" -prompt "Please enter SMTP relay password" -namespace $namespace
+    [string] $smtpRelayPassword = $(ReadSecretPassword -secretname "smtprelaypassword" -namespace "default")
+    if ([string]::IsNullOrEmpty($smtpRelayPassword)) {
+        AskForPasswordAnyCharacters -secretname "smtprelaypassword" -prompt "Please enter SMTP relay password" -namespace $namespace
+    }
+    else {
+        SaveSecretPassword -secretname "smtprelaypassword" -namespace $namespace -value $smtpRelayPassword
+    }
+
     $dnshostname = $(ReadSecretValue -secretname "dnshostname" -namespace "default")
     SaveSecretValue -secretname "nlpweb-external-url" -valueName "value" -value "nlp.$dnshostname" -namespace $namespace
     SaveSecretValue -secretname "jobserver-external-url" -valueName "value" -value "nlpjobs.$dnshostname" -namespace $namespace

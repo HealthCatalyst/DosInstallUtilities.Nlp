@@ -79,20 +79,24 @@ function ShowNlpMenu()
                 kubectl get 'deployments,pods,services,ingress,secrets,persistentvolumeclaims,persistentvolumes,nodes' --namespace=$namespace -o wide
             }
             '3' {
-                $certhostname = $(ReadSecretValue certhostname $namespace)
-                Write-Host "Send HL7 to Mirth: server=${certhostname} port=6661"
-                Write-Host "Rabbitmq Queue: server=${certhostname} port=5671"
-                $rabbitmqpassword = $(ReadSecretPassword rabbitmqmgmtuipassword $namespace)
-                Write-Host "RabbitMq Mgmt UI is at: http://${certhostname}/rabbitmq/ user: admin password: $rabbitmqpassword"
-                Write-Host "Mirth Mgmt UI is at: http://${certhostname}/mirth/ user: admin password:admin"
+                $loadBalancerIPResult = $(GetLoadBalancerIPs)
+                $loadBalancerIP = $loadBalancerIPResult.ExternalIP
+                $loadBalancerInternalIP = $loadBalancerIPResult.InternalIP
+
+                Write-Host "Solr UI is at http://$loadBalancerInternalIP/solr in the web browser"
+                Start-Process -FilePath "http://$loadBalancerInternalIP/solr";
+                Write-Host "NLP web UI is at http://$loadBalancerIP/nlpweb in the web browser (ndepthuser/password)"
+                Start-Process -FilePath "http://$loadBalancerIP/nlpweb";
+                Write-Host "NLP job UI is at http://$loadBalancerIP/nlp in the web browser"
+                Start-Process -FilePath "http://$loadBalancerIP/nlp";
 
                 $secrets = $(kubectl get secrets -n $namespace -o jsonpath="{.items[?(@.type=='Opaque')].metadata.name}")
                 Write-Host "All secrets in $namespace : $secrets"
                 WriteSecretPasswordToOutput -namespace $namespace -secretname "mysqlrootpassword"
                 WriteSecretPasswordToOutput -namespace $namespace -secretname "mysqlpassword"
-                WriteSecretValueToOutput  -namespace $namespace -secretname "certhostname"
-                WriteSecretPasswordToOutput -namespace $namespace -secretname "certpassword"
-                WriteSecretPasswordToOutput -namespace $namespace -secretname "rabbitmqmgmtuipassword"
+                WriteSecretPasswordToOutput -namespace $namespace -secretname "smtprelaypassword"
+                WriteSecretValueToOutput  -namespace $namespace -secretname "jobserver-external-url"
+                WriteSecretValueToOutput  -namespace $namespace -secretname "nlpweb-external-url"
             }
             '5' {
                 ShowStatusOfAllPodsInNameSpace "$namespace"

@@ -5,3 +5,7 @@
 
 . $PSScriptRoot\functions\Secrets\CreateSecretsForNlp.ps1
 
+. $PSScriptRoot\functions\Install\InstallNlp.ps1
+
+
+

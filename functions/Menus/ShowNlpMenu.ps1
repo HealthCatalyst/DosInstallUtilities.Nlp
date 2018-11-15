@@ -73,20 +73,7 @@ function ShowNlpMenu()
                 }
                 $VerbosePreference = 'Continue'
 
-                CreateSecretsForNlp -namespace $namespace -Verbose
-
-                if ($isAzure) {
-                    InstallProductInAzure -namespace $namespace -packageUrl $packageUrl -local $local -Verbose
-                }
-                else {
-                    CreateOnPremStorage -namespace $namespace
-
-                    InstallStackInKubernetes `
-                        -namespace $namespace `
-                        -package $namespace `
-                        -packageUrl $packageUrl `
-                        -isOnPrem $true
-                }
+                InstallNlp -namespace $namespace -package "fabricnlp" -packageUrl $packageUrl -local $local -isAzure $isAzure
             }
             '2' {
                 kubectl get 'deployments,pods,services,ingress,secrets,persistentvolumeclaims,persistentvolumes,nodes' --namespace=$namespace -o wide

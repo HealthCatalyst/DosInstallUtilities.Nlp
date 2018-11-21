@@ -73,7 +73,14 @@ function ShowNlpMenu()
                 }
                 $VerbosePreference = 'Continue'
 
-                InstallNlp -namespace $namespace -package "fabricnlp" -packageUrl $packageUrl -local $local -isAzure $isAzure
+                [string] $environmentName = $(ReadSecretValue -secretname dnshostname -namespace "default")
+
+                InstallNlp -namespace $namespace `
+                            -environmentName $environmentName `
+                            -package "fabricnlp" `
+                            -packageUrl $packageUrl `
+                            -local $local `
+                            -isAzure $isAzure
             }
             '2' {
                 kubectl get 'deployments,pods,services,ingress,secrets,persistentvolumeclaims,persistentvolumes,nodes' --namespace=$namespace -o wide

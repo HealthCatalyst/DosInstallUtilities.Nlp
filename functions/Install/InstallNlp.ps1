@@ -31,6 +31,11 @@ function InstallNlp() {
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]
+        $environmentName
+        ,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
         $package
         ,
         [Parameter(Mandatory = $true)]
@@ -72,12 +77,14 @@ function InstallNlp() {
     if ($isAzure) {
         helm install $packageUrl `
             --name $package `
+            --set customerid=$environmentName `
             --namespace $namespace `
             --debug
     }
     else {
         helm install $packageUrl `
             --name $package `
+            --set customerid=$environmentName `
             --namespace $namespace `
             --set onprem=true `
             --debug

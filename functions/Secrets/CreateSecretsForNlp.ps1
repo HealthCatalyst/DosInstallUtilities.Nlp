@@ -46,8 +46,8 @@ function CreateSecretsForNlp() {
     }
 
     $dnshostname = $(ReadSecretValue -secretname "dnshostname" -namespace "default")
-    SaveSecretValue -secretname "nlpweb-external-url" -valueName "value" -value "nlp.$dnshostname" -namespace $namespace
-    SaveSecretValue -secretname "jobserver-external-url" -valueName "value" -value "nlpjobs.$dnshostname" -namespace $namespace
+    SaveSecretValue -secretname "nlpweb-external-url" -valueName "value" -value "$dnshostname/nlpweb" -namespace $namespace
+    SaveSecretValue -secretname "jobserver-external-url" -valueName "value" -value "nlp$dnshostname/nlp" -namespace $namespace
 
     $secret = "mysqlrootpassword"
     GenerateSecretPassword -secretname "$secret" -namespace "$namespace"
@@ -55,7 +55,6 @@ function CreateSecretsForNlp() {
     GenerateSecretPassword -secretname "$secret" -namespace "$namespace"
 
     Write-Verbose 'CreateSecretsForNlp: Done'
-
 }
 
 Export-ModuleMember -Function 'CreateSecretsForNlp'

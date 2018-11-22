@@ -74,17 +74,25 @@ function InstallNlp() {
 
     Write-Host "Installing product from $packageUrl into $namespace"
 
+    # you can also set slackUrl in the helm install below
+    [int] $monitoringSleepInterval = 300
+    [int] $monitoringIntervalBetweenMessages = 3600
+
     if ($isAzure) {
         helm install $packageUrl `
             --name $package `
-            --set customerid=$environmentName `
+            --set environmentName=$environmentName `
+            --set-string monitoringSleepInterval='"'$monitoringSleepInterval'"' `
+            --set-string monitoringIntervalBetweenMessages='"'$monitoringIntervalBetweenMessages'"' `
             --namespace $namespace `
             --debug
     }
     else {
         helm install $packageUrl `
             --name $package `
-            --set customerid=$environmentName `
+            --set environmentName=$environmentName `
+            --set-string monitoringSleepInterval='"'$monitoringSleepInterval'"' `
+            --set-string monitoringIntervalBetweenMessages'"'$monitoringIntervalBetweenMessages'"' `
             --namespace $namespace `
             --set onprem=true `
             --debug

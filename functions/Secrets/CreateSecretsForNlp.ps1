@@ -54,6 +54,16 @@ function CreateSecretsForNlp() {
     $secret = "mysqlpassword"
     GenerateSecretPassword -secretname "$secret" -namespace "$namespace"
 
+    Write-Verbose "Copying ssl certificate secrets from kube-system to $namespace"
+    [string] $secretName = "fabric-ca-cert"
+    kubectl get secret $secretName --namespace=kube-system --export -o yaml | kubectl apply --namespace="$namespace" -f -
+    [string] $secretName = "fabric-ssl-cert"
+    kubectl get secret $secretName --namespace=kube-system --export -o yaml | kubectl apply --namespace="$namespace" -f -
+    [string] $secretName = "fabric-client-cert"
+    kubectl get secret $secretName --namespace=kube-system --export -o yaml | kubectl apply --namespace="$namespace" -f -
+    [string] $secretName = "fabric-ssl-download-cert"
+    kubectl get secret $secretName --namespace=kube-system --export -o yaml | kubectl apply --namespace="$namespace" -f -
+
     Write-Verbose 'CreateSecretsForNlp: Done'
 }
 
